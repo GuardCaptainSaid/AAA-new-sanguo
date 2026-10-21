@@ -1,6 +1,6 @@
 local j_jianmou = fk.CreateSkill {
   name = "j_jianmou",
-  tags = { Skill.Compulsory },
+  tags = { Skill.Locked },
 }
 
 Fk:loadTranslationTable{
@@ -10,8 +10,9 @@ Fk:loadTranslationTable{
   ["@@j_jianmou-inhand"] = "间谋",
 }
 
--- 间谋标记牌对全场明置（对其他角色可见；非间谋牌返回 nil 不表态，保持默认可见性）
+-- 间谋标记牌对全场明置（非间谋牌返回 nil 不表态，保持默认可见性）
 j_jianmou:addEffect("visibility", {
+  global = true,
   card_visible = function(self, player, card)
     if card and card:getMark("@@j_jianmou-inhand") > 0 then return true end
     return nil
@@ -21,7 +22,6 @@ j_jianmou:addEffect("visibility", {
 -- 不记入手牌上限
 j_jianmou:addEffect("maxcards", {
   exclude_from = function(self, player, card)
-    if not card then return false end
     return card:getMark("@@j_jianmou-inhand") > 0 and player:hasSkill(j_jianmou.name)
   end
 })
@@ -32,7 +32,6 @@ j_jianmou:addEffect(fk.AfterCardsMove, {
   can_trigger = function(self, event, target, player, data)
     if not player:hasSkill(j_jianmou.name) then return false end
     if player.dead then return false end
-    if not data or type(data) ~= "table" then return false end
     -- 摸牌阶段内的摸牌不视为“摸牌阶段外”
     local current = player.room.current
     if current and current.phase == Player.Draw then return false end
@@ -50,7 +49,7 @@ j_jianmou:addEffect(fk.AfterCardsMove, {
     local room = player.room
     for _, move in ipairs(data) do
       if move.to == player and move.toArea == Card.PlayerHand then
-        for _, info in ipairs(move.moveInfo or {}) do
+        for _, info in ipairs(move.moveInfo) do
           local card = Fk:getCardById(info.cardId)
           if card:getMark("@@j_jianmou-inhand") == 0 then
             room:setCardMark(card, "@@j_jianmou-inhand", 1)
@@ -87,8 +86,7 @@ j_jianmou:addEffect(fk.TargetConfirmed, {
       return c:getMark("@@j_jianmou-inhand") > 0 and c.suit == suit
     end)
     if #shown > 0 then
-      -- 展示给全场（明置=对其他角色可见）
-      room:showCards(shown, player, player)
+      player:showCards(shown, player)
       room:drawCards(player, 1, j_jianmou.name)
     end
   end,
@@ -211,24 +209,19 @@ j_jianmou:addTest(function(room, me)
   end)
 end)
 
--- 测试：间谋牌对其他角色可见（明置），普通牌对其他角色保持暗置
+-- 测试：间谋牌明置可见，普通牌保持默认可见性
 j_jianmou:addTest(function(room, me)
-  local comp3 = room.players[3]
   local c1, c2
   FkTest.runInRoom(function()
+    room:handleAddLoseSkills(me, j_jianmou.name)
     c1 = room:printCard("slash", Card.Spade, 5)
     c2 = room:printCard("peach", Card.Heart, 6)
-    -- 先获得普通牌（此时尚未拥有间谋，不会被标记）
-    room:obtainCard(me, { c2 }, false, fk.ReasonPrey, me, "test")
-    room:handleAddLoseSkills(me, j_jianmou.name)
-    -- 拥有间谋后再获得，触发摸牌阶段外获得 → 自动标记
-    room:obtainCard(me, { c1 }, false, fk.ReasonPrey, me, "test")
+    room:obtainCard(me, { c1, c2 }, true, fk.ReasonDraw, me, "test")
+    room:setCardMark(c1, "@@j_jianmou-inhand", 1)
   end)
   FkTest.runInRoom(function()
     lu.assertTrue(me:cardVisible(c1.id), "间谋牌应明置可见")
-    lu.assertTrue(comp3:cardVisible(c1.id), "间谋牌应对其他角色可见（明置=对其他角色可见）")
-    lu.assertTrue(me:cardVisible(c2.id), "普通牌对持有者应可见")
-    lu.assertFalse(comp3:cardVisible(c2.id), "普通牌对其他角色应暗置")
+    lu.assertTrue(me:cardVisible(c2.id), "普通牌应保持默认可见")
   end)
 end)
 

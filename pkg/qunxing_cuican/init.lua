@@ -34,43 +34,4 @@ Fk:loadTranslationTable{
   ["~sp_caocao"] = "孟德愿献宝刀……为天下除此国贼……",
 }
 
-local xinchang_wangxiang = General:new(extension, "xinchang_wangxiang", "jin", 3, 3)
-xinchang_wangxiang:addSkills { "j_jiance", "j_bingxin", "j_zhongxiao" }
-Fk:loadTranslationTable{
-  ["xinchang_wangxiang"] = "辛敞 & 王祥",
-  ["#xinchang_wangxiang"] = "忠孝经纬",
-  ["designer:xinchang_wangxiang"] = "袁焉",
-  ["illustrator:xinchang_wangxiang"] = "豆包AI",
-  ["cv:xinchang_wangxiang"] = "佚名",
-
-  ["~xinchang_wangxiang"] = "忠孝两全，死而无憾……",
-}
-
-local jiangwei_zhonghui = General:new(extension, "jiangwei_zhonghui", "qun", 3, 3)
-jiangwei_zhonghui:addSkills { "j_huaiyi", "j_fubing", "j_heli" }
-jiangwei_zhonghui:addRelatedSkills { "j_gongmou", "j_yiyi" }
-Fk:loadTranslationTable{
-  ["jiangwei_zhonghui"] = "姜维 & 钟会",
-  ["#jiangwei_zhonghui"] = "同心同德",
-  ["designer:jiangwei_zhonghui"] = "袁焉",
-  ["illustrator:jiangwei_zhonghui"] = "豆包AI",
-  ["cv:jiangwei_zhonghui"] = "佚名",
-
-  ["~jiangwei_zhonghui"] = "志同道合，生死与共……",
-}
-
--- 姜维&钟会 皮肤
-extension:addSkinPackage{
-  content = {
-    { enabled_generals = { "jiangwei_zhonghui" }, skins = { "jwxz_skin1", "jwxz_skin2", "jwxz_skin3", "jwxz_skin4", "jwxz_skin5" } },
-  },
-}
-Fk:loadTranslationTable{
-  ["$jwxz_skin1"] = "同契·昼",
-  ["$jwxz_skin2"] = "同契·夜",
-  ["$jwxz_skin3"] = "同烬归鸿",
-  ["$jwxz_skin4"] = "帷中暗契",
-  ["$jwxz_skin5"] = "炬下同心",
-}
-
 return extension

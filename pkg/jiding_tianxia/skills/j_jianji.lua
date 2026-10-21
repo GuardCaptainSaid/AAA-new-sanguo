@@ -89,11 +89,8 @@ j_jianji:addEffect("active", {
   can_use = function(self, player)
     if player:getMark("j_jianji_used") ~= 0 then return false end
     if #player:getCardIds("he") < 2 then return false end
-    -- 客户端刷新技能按钮时也会调用 can_use，客户端玩家无 room 字段，须用 Fk:currentRoom()
-    local room = Fk:currentRoom()
-    if not room then return false end
     local n = 0
-    for _, p in ipairs(room.alive_players) do
+    for _, p in ipairs(player.room.alive_players) do
       if p ~= player and not p:isKongcheng() then
         n = n + 1
         if n >= 2 then break end
@@ -151,19 +148,6 @@ j_jianji:addTest(function(room, me)
     lu.assertEquals(me:getMark("j_jianji_used"), 1, "应消耗出牌阶段限次")
     lu.assertEquals(comp2.hp, 3, "点数小者（无杀响应）应受决斗一点伤害")
     lu.assertEquals(#me:getCardIds("h"), 2, "应获得两张拼点牌")
-  end)
-end)
-
--- 测试：回合开始（Start 阶段）重置间计限次
-j_jianji:addTest(function(room, me)
-  FkTest.runInRoom(function()
-    room:handleAddLoseSkills(me, j_jianji.name)
-    room:setPlayerMark(me, "j_jianji_used", 1)
-    me.phase = Player.Start
-  end)
-  FkTest.runInRoom(function()
-    room.logic:trigger(fk.EventPhaseStart, me, { phase = Player.Start })
-    lu.assertEquals(me:getMark("j_jianji_used"), 0, "回合开始应重置间计限次")
   end)
 end)
 

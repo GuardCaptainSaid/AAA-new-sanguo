@@ -92,8 +92,9 @@ w_wuxian:addTest(function(room, me)
     lu.assertNotNil(black_id)
     act_eff.on_use(act_eff, room, { from = me })
 
-    -- 红色牌被重铸（不再在手牌，换成新摸的牌），黑色牌保留且点数视为3
+    -- 红色牌被重铸（不再在手牌），黑色牌保留且点数视为3
     local kept_ids = me:getCardIds("h")
+    lu.assertNotEquals(#kept_ids, 2, "红色手牌应被重铸弃置")
     lu.assertFalse(table.contains(kept_ids, red_id), "红色手牌应被重铸弃置")
     lu.assertTrue(table.contains(kept_ids, black_id), "黑色手牌应保留")
     local kept = Fk:getCardById(black_id)

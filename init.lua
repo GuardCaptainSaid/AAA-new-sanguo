@@ -8,8 +8,6 @@ local mouding_tianxia = require("packages.AAA new sanguo.pkg.mouding_tianxia")
 local zhulin_qixian = require("packages.AAA new sanguo.pkg.zhulin_qixian")
 local xinjun_celi = require("packages.AAA new sanguo.pkg.xinjun_celi")
 local xinghan_canlan = require("packages.AAA new sanguo.pkg.xinghan_canlan")
-local sheji_dasai = require("packages.AAA new sanguo.pkg.sheji_dasai")
-local yansheng_pai = require("packages.AAA new sanguo.pkg.yansheng_pai")
 
 Fk:loadTranslationTable{ ["AAA new sanguo"] = "AAA新三国" }
 
@@ -22,6 +20,4 @@ return {
     zhulin_qixian,
     xinjun_celi,
     xinghan_canlan,
-    sheji_dasai,
-    yansheng_pai,
 }

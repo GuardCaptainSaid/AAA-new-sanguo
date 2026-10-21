@@ -8,7 +8,7 @@
 
 local extension = Package:new("yansheng_pai", Package.CardPack)
 
-extension.extensionName = "AAA new sanguo"
+extension.extensionName = "AAA-new-sanguo"
 
 -- 卡牌定义（供卡牌一览/翻译/技能引用）；"&" 前缀标记为衍生牌：不进初始牌堆
 local j_zicangxiangzeng = fk.CreateCard {

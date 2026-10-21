@@ -3,7 +3,7 @@
 import math
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-OUT = r"C:\Users\32168\Desktop\FreeKill-release\packages\AAA new sanguo\image\kingdom"
+OUT = r"C:\Users\32168\Desktop\FreeKill-release\packages\AAA-new-sanguo\image\kingdom"
 FONT_BD = r"C:\Windows\Fonts\msyhbd.ttc"
 FONT = r"C:\Windows\Fonts\msyh.ttc"
 
